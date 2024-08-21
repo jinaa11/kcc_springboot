@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kcc.mission.mapper.ReviewMapper">
+    <resultMap id="reviewMap" type="Review">
+        <id property="id" column="id"/>
+        <result property="content" column="content"/>
+        <result property="score" column="score"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="restaurantId" column="restaurant_id"/>
+<!--        <collection property=""-->
+    </resultMap>
+
+    <insert id="registerReview">
+        insert into review(id, content, score, created_at, restaurant_id)
+        values (review_seq.nextval, #{content}, #{score}, systimestamp, #{restaurant_id})
+    </insert>
+
+<!--    <select id="getOneReview" resultMap="reviewMap">
+        select id, name, price, created_at, updated_at
+        from restaurant
+    </select>-->
+
+
+    <delete id="deleteReview" parameterType="long">
+        delete from review where id=#{id}
+    </delete>
+</mapper>

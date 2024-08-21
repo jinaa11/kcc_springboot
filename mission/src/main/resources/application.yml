@@ -1,0 +1,17 @@
+server:
+  port: 8081
+
+#logging:
+#  level:
+#    org.springframework: DEBUG
+
+spring:
+  datasource:
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@localhost:1521:XE
+    username: kcc
+    password: 1234
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.kcc.mission.bean
