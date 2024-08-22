@@ -8,9 +8,12 @@
         <id property="id" column="id"/>
         <result property="content" column="content"/>
         <result property="score" column="score"/>
-        <result property="createdAt" column="created_at"/>
-        <result property="restaurantId" column="restaurant_id"/>
-<!--        <collection property=""-->
+        <result property="created_at" column="created_at"/>
+    </resultMap>
+
+    <resultMap id="reviewDtoMap" type="ReviewDTO">
+        <result property="avgScore" column="avgScore"/>
+        <collection property="reviews" resultMap="reviewMap"/>
     </resultMap>
 
     <insert id="registerReview">
@@ -18,11 +21,11 @@
         values (review_seq.nextval, #{content}, #{score}, systimestamp, #{restaurant_id})
     </insert>
 
-<!--    <select id="getOneReview" resultMap="reviewMap">
-        select id, name, price, created_at, updated_at
-        from restaurant
-    </select>-->
-
+    <select id="getReviewsByRestaurantId" resultMap="reviewDtoMap" parameterType="long">
+        select id, content, score, created_at, (select avg(score) from review) as avgScore
+        from review
+        where restaurant_id = #{restaurant_id}
+    </select>
 
     <delete id="deleteReview" parameterType="long">
         delete from review where id=#{id}
