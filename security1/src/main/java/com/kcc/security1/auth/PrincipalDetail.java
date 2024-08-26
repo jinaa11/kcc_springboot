@@ -1,19 +1,36 @@
 package com.kcc.security1.auth;
 
 import com.kcc.security1.model.User;
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 
-public class PrincipalDetail implements UserDetails {
+@Data
+public class PrincipalDetail implements UserDetails, OAuth2User {
     private User user;
-    
+    private Map<String, Object> attributes;
+
+    // 일반 로그인
     public PrincipalDetail(User user) {
         this.user = user;
     }
-    
+
+    // OAuth 로그인
+    public PrincipalDetail(User user, Map<String, Object> attributes) {
+        this.user = user;
+        this.attributes = attributes;
+    }
+
+    @Override
+    public Map<String, Object> getAttributes() {
+        return attributes;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         // GrantedAuthority를 통해서 권한 관리
@@ -57,5 +74,10 @@ public class PrincipalDetail implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public String getName() {
+        return "";
     }
 }

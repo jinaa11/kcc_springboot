@@ -30,7 +30,7 @@
         select r.id as r_id, r.name as r_name, r.address, r.created_at as r_created_at, r.updated_at as r_updated_at,
                m.id as m_id, m.name as m_name, m.price as m_price, m.created_at as m_created_at, m.updated_at as m_updated_at
         from restaurant r
-        left join restaurant_menu m
+                 left join restaurant_menu m
         on r.id = m.restaurant_id
         where r.id = #{id}
     </select>

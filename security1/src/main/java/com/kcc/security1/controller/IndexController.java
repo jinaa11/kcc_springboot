@@ -1,9 +1,11 @@
 package com.kcc.security1.controller;
 
+import com.kcc.security1.auth.PrincipalDetail;
 import com.kcc.security1.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,7 +32,8 @@ public class IndexController {
     }
 
     @GetMapping("/user")
-    public @ResponseBody String user() {
+    public @ResponseBody String user(@AuthenticationPrincipal PrincipalDetail principalDetail) {
+        System.out.println("principalDetail: " + principalDetail.getUser());
         return "user";
     }
 
@@ -51,6 +54,11 @@ public class IndexController {
     @GetMapping("/loginForm")
     public String login() {
         return "loginForm";
+    }
+
+    @GetMapping("/logout")
+    public @ResponseBody String logout() {
+        return "logout";
     }
 
     @GetMapping("/joinForm")

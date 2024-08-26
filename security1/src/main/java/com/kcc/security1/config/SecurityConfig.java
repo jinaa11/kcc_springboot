@@ -1,5 +1,7 @@
 package com.kcc.security1.config;
 
+import com.kcc.security1.oauth.PrincipalOauth2UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +19,9 @@ import java.nio.file.Path;
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
+    @Autowired
+    private PrincipalOauth2UserService principalOauth2UserService;
+
     private static final String[] WHITE_LIST = {
             "/",
             "/common/**",
@@ -40,13 +45,18 @@ public class SecurityConfig {
                         authorize.requestMatchers(WHITE_LIST).permitAll()
                                 .requestMatchers(PathRequest.toH2Console()).permitAll()
                                 .anyRequest().authenticated()
-                // Frameset에서 인식하지 못 하는 것은 보이게 해라
+                // h2 DB가 Frameset에서 인식하지 못 하는 것(깨지는 것)을 보이게 해라
                 ).csrf(csrf -> csrf.ignoringRequestMatchers(PathRequest.toH2Console()))
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
                 .formLogin(form -> form.loginPage("/loginForm")
                         // 시큐리티가 인증을 함
                         .loginProcessingUrl("/login")
-                        .defaultSuccessUrl("/main"));
+                        .defaultSuccessUrl("/main"))
+                .oauth2Login(oauth2Login ->
+                        oauth2Login.loginPage("/loginForm")
+                        .userInfoEndpoint(userInfoEndpoint ->
+                                userInfoEndpoint.userService(principalOauth2UserService))
+                );
 
         return http.build();
 
